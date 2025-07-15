@@ -14,6 +14,7 @@ class ActionType(str, Enum):
     NAVIGATE = "navigate"
     CLICK = "click"
     TYPE = "type"
+    OBSERVE = "observe"
 
 
 class ExecutionAction(BaseModel):

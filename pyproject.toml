@@ -8,10 +8,24 @@ dependencies = [
     "chainlit>=2.6.0",
     "openai-agents>=0.1.0",
     "pydantic>=2.11.7",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
     "stagehand>=0.4.0",
 ]
 
 [dependency-groups]
 dev = [
     "ipykernel>=6.29.5",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-v"
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests as integration tests (requires API keys and network)",
+    "slow: marks tests as slow running (may take several seconds/minutes)",
 ]

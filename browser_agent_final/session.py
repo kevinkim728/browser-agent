@@ -37,9 +37,16 @@ class BrowserSession:
     async def close(self):
         """Close the browser session and cleanup resources."""
         if self.stagehand:
-            await self.stagehand.close()
-        self.stagehand = None
-        self.page = None
+            try:
+                await self.stagehand.close()
+            finally:
+                # Always clean up, even if close() fails
+                self.stagehand = None
+                self.page = None
+        else:
+            # No stagehand to close, just ensure cleanup
+            self.stagehand = None
+            self.page = None
     
     async def is_active(self) -> bool:
         """Check if the browser session is active."""

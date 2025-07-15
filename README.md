@@ -44,9 +44,7 @@ Open http://localhost:8000 in your browser and start giving commands through the
 - `Navigate to https://example.com`
 - `Click the login button`
 - `Type "john@example.com" in the email field`
-- `Scroll down to see more content`
-- `Extract all product names from this page`
-- `Go back to the previous page`
+- `Observe elements on page`
 
 ## Project Structure
 
@@ -91,7 +89,7 @@ Each browser action returns an `ActResult` with:
 
 The agent can be configured through the `AgentConfig` and `BrowserConfig` classes in `browser_agent_final/classes.py`. Default settings include:
 - **10-second action timeouts** (using correct `timeout_ms` parameter)
-- **10-second DOM settle timeout** for page stabilization  
+- **5-second DOM settle timeout** for page stabilization  
 - **Headless browser mode** (configurable)
 - **1920x1080 viewport**
 - **Local browser environment** with full debugging capabilities

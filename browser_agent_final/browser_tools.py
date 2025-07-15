@@ -130,6 +130,47 @@ async def type_text(instruction: str) -> ExecutionAction:
             page_changed=False,
             action_taken=None
         )
+    
+@function_tool
+async def observe_page(instruction: str) -> ExecutionAction:
+    """
+    Observe is used to get a list of actions that can be taken on the current page. 
+    If you are looking for a specific element, you can also pass in an instruction to observe.
+    Observe can also return a suggested action for the candidate element.
+    """
+    try:
+        page = await browser_session.get_page()
+        
+
+        elements = await page.observe(instruction=instruction, return_action=True)
+        await asyncio.sleep(5)
+        
+        
+        return ExecutionAction(
+            current_url=page.url,
+            page_title=await page.title(),
+            success=True,
+            action_type=ActionType.OBSERVE,
+            instruction=instruction,
+            execution_details=f"Found {len(elements)} observable elements on the page",
+            page_changed=False,
+            result_data=elements,
+            action_taken=f"Observed page elements with instruction: {instruction}"
+        )
+        
+    except Exception as e:
+        page = await browser_session.get_page()
+        return ExecutionAction(
+            current_url=page.url,
+            page_title=await page.title(),
+            success=False,
+            action_type=ActionType.OBSERVE,
+            instruction=instruction,
+            execution_details=str(e),
+            page_changed=False,
+            result_data=None,
+            action_taken=None
+        )
 
 
 
@@ -137,5 +178,6 @@ async def type_text(instruction: str) -> ExecutionAction:
 __all__ = [
     "navigate_to",
     "click_element",
-    "type_text"
+    "type_text",
+    "observe_page"
 ]
