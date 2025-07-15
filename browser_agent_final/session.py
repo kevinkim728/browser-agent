@@ -4,6 +4,7 @@ Browser session management.
 This module handles the Stagehand browser session lifecycle.
 """
 
+import os
 from stagehand import Stagehand
 from .classes import BrowserConfig
 
@@ -22,6 +23,10 @@ class BrowserSession:
             self.stagehand = Stagehand(
                 dom_settle_timeout_ms=self.config.timeout,
                 env="LOCAL",
+                modelName="openai/gpt-4o-mini",  
+                modelClientOptions={
+                    "apiKey": os.environ.get("OPENAI_API_KEY")
+                },
                 local_browser_launch_options={
                     "headless": self.config.headless,
                     "viewport": {

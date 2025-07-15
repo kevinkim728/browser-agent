@@ -7,7 +7,7 @@ A modular browser automation system using AI agents and Stagehand.
 from .classes import ExecutionAction, ActionType, BrowserConfig, AgentConfig
 from .session import browser_session, BrowserSession
 from .core_agent import browser_agent, create_browser_agent
-from .browser_tools import navigate_to, click_element, type_text, observe_page
+from .browser_tools import navigate_to, click_element, type_text, observe_page, extract_page
 
 
 __all__ = [
@@ -26,5 +26,5 @@ __all__ = [
     "create_browser_agent",
     
     # browser_tools
-    "navigate_to", "click_element", "type_text", "observe_page"
+    "navigate_to", "click_element", "type_text", "observe_page", "extract_page"
     ]

@@ -6,7 +6,7 @@ This module contains the main agent definition and instructions.
 from agents import Agent, ModelSettings
 from datetime import datetime
 from .classes import AgentConfig
-from .browser_tools import navigate_to, click_element, type_text, observe_page
+from .browser_tools import navigate_to, click_element, type_text, observe_page, extract_page
 
 
 def create_browser_agent(config: AgentConfig = None) -> Agent:
@@ -33,9 +33,10 @@ Today's date is {datetime.now().strftime("%Y-%m-%d")}. This is important for dat
 2. click_element - Click on elements 
 3. type_text - Type text into fields
 4. observe_page - Observe the page for elements and actions
+5. extract_page - Extract data from the page
 
 **OBSERVE_PAGE STRATEGY**:
-**IMPORTANT**: When using observe_page, observe for specific elements related to your current or next task, not something generic like "elements on the page".
+**IMPORTANT**: When using observe_page, observe for specific elements related to your current or next task, not something generic.
 - Use observe_page anytime the page_changed=True.
 - Use observe_page anytime theres an error or if success=False.
 - Example: If click fails on "Click search button", use "find all search buttons" not "list visible elements".
@@ -71,7 +72,7 @@ NEVER use technical selectors or DOM references.
 
 """
 
-    tools = [navigate_to, click_element, type_text, observe_page]
+    tools = [navigate_to, click_element, type_text, observe_page, extract_page]
     
     return Agent(
         name="browser_automation_agent",

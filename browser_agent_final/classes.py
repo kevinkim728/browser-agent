@@ -15,6 +15,7 @@ class ActionType(str, Enum):
     CLICK = "click"
     TYPE = "type"
     OBSERVE = "observe"
+    EXTRACT = "extract"
 
 
 class ExecutionAction(BaseModel):

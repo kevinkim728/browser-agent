@@ -10,6 +10,13 @@ from agents import Runner, trace
 from browser_agent_final import browser_agent, browser_session, AgentConfig
 import os
 import signal
+import asyncio
+
+ACTIONS = [
+    cl.Action(name="Close Browser", payload={"action": "close"}, description="Close Browser Session"),
+    cl.Action(name="Stop Session", payload={"action": "stop"}, description="Stop & Cleanup")
+]
+
 
 @cl.on_chat_start
 async def start():
@@ -22,17 +29,14 @@ async def start():
 Just tell me what you want to do in plain English!
 
 *Examples:*
-- "Go to Amazon and search for the cheapest wireless headphones"
 - "Navigate to Google and find the weather for New York"
-- "Extract product prices from the search results"  
+- "Find Fender Stratocaster on OfferUp"
+- "Find the top trending Youtube video"
 
 What would you like me to help you with?
 """
-    actions = [
-        cl.Action(name="Close Browser", payload={"action": "close"}, description="Close Browser Session"),
-        cl.Action(name="Stop Session", payload={"action": "stop"}, description="Stop & Cleanup")
-    ]
-    await cl.Message(content=welcome_message, author="Browser Agent", actions=actions).send()
+
+    await cl.Message(content=welcome_message, author="Browser Agent", actions=ACTIONS).send()
  
 
 @cl.action_callback("Close Browser")
@@ -89,7 +93,7 @@ Please wait..."""
                 message.content, 
                 max_turns=AgentConfig().max_turns
             )
-        
+
         # Prepare final response
         response_content = f"""
 ✅ **Task Completed Successfully!**
@@ -99,18 +103,8 @@ Please wait..."""
 ---
 *💡 Tip: You can ask me to perform another task or take additional actions on the current page.*
 """
-        actions = [
-            cl.Action(name="Close Browser", payload={"action": "close"}, description="Close Browser Session"),
-            cl.Action(name="Stop Session", payload={"action": "stop"}, description="🛑 Stop & Cleanup")
-    ]
 
-        final_msg = cl.Message(
-            content=response_content,
-            author="Browser Agent",
-            actions=actions
-        )
-        
-        await final_msg.send()
+        await cl.Message(content=response_content, author="Browser Agent", actions=ACTIONS).send()
         
     except Exception as e:
         error_msg = f"""
@@ -125,11 +119,7 @@ Please wait..."""
 
 Feel free to try again with a different approach!
 """
-        actions = [
-            cl.Action(name="Close Browser", payload={"action": "close"}, description="Close Browser Session"),
-            cl.Action(name="Stop Session", payload={"action": "stop"}, description="🛑 Stop & Cleanup")
-    ]
-        await cl.Message(content=error_msg, author="Browser Agent", actions=actions).send()
+        await cl.Message(content=error_msg, author="Browser Agent", actions=ACTIONS).send()
 
 
 @cl.on_stop

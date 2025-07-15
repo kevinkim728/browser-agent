@@ -19,7 +19,7 @@ async def navigate_to(url: str) -> ExecutionAction:
         page = await browser_session.get_page()
         
         await page.goto(url)
-        await asyncio.sleep(5)
+        await asyncio.sleep(3)
 
         return ExecutionAction(
             current_url=page.url,
@@ -56,8 +56,9 @@ async def click_element(instruction: str) -> ExecutionAction:
         page = await browser_session.get_page()
         current_url_before = page.url 
         
+        await asyncio.sleep(2)
         result = await page.act(instruction, timeout_ms=10000)
-        await asyncio.sleep(5)
+        await asyncio.sleep(2)
         
         current_url_after = page.url
         page_changed = current_url_before != current_url_after 
@@ -95,8 +96,9 @@ async def type_text(instruction: str) -> ExecutionAction:
         page = await browser_session.get_page()
         
         # Execute the typing action
+        await asyncio.sleep(2)
         result = await page.act(instruction, timeout_ms=10000)
-        await asyncio.sleep(5)
+        await asyncio.sleep(2)
         
         # Get current page state
         current_url = page.url
@@ -171,6 +173,46 @@ async def observe_page(instruction: str) -> ExecutionAction:
             result_data=None,
             action_taken=None
         )
+    
+
+@function_tool
+async def extract_page(instruction: str) -> ExecutionAction:
+    """
+    Extract is used to extract data from the current page.
+    """
+    try:
+        page = await browser_session.get_page()
+        
+
+        extract_result = await page.extract(instruction=instruction)
+        await asyncio.sleep(3)
+        
+        
+        return ExecutionAction(
+            current_url=page.url,
+            page_title=await page.title(),
+            success=True,
+            action_type=ActionType.EXTRACT,
+            instruction=instruction,
+            execution_details=f"Extracted data from the page",
+            page_changed=False,
+            result_data=extract_result,
+            action_taken=f"Extracted data from the page with instruction: {instruction}"
+        )
+        
+    except Exception as e:
+        page = await browser_session.get_page()
+        return ExecutionAction(
+            current_url=page.url,
+            page_title=await page.title(),
+            success=False,
+            action_type=ActionType.EXTRACT,
+            instruction=instruction,
+            execution_details=str(e),
+            page_changed=False,
+            result_data=None,
+            action_taken=None
+        )
 
 
 
@@ -179,5 +221,6 @@ __all__ = [
     "navigate_to",
     "click_element",
     "type_text",
-    "observe_page"
+    "observe_page",
+    "extract_page"
 ]
